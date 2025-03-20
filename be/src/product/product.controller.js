@@ -2,10 +2,12 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  // const products = await getAllProducts();
+const { getAllProducts } = require('./product.service');
 
-  res.send("hello from products");
+router.get("/", async (req, res) => {
+  const products = await getAllProducts();
+
+  res.send(products);
 });
 
 module.exports = router;

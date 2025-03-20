@@ -7,4 +7,7 @@ server {
         proxy_pass http://be:$API_PORT/;
     }
 
+    # location /phpmyadmin/ {
+    #     proxy_pass http://pma:$PMA_PORT/;
+    # }
 }

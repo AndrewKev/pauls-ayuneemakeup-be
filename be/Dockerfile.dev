@@ -1,13 +1,15 @@
 FROM node:18-alpine
 
-RUN addgroup -S appgroup && adduser -S app -G appgroup
-USER app
-
 WORKDIR /app
 
-COPY --chown=app:app package*.json .
+RUN addgroup -S appgroup && adduser -S app -G appgroup
+COPY --chown=app:app package*.json ./
 RUN npm install
 
-COPY --chown=app:app --chmod=755 . /app
+COPY --chown=app:app . ./
 
-CMD npm run dev
+RUN npx prisma generate 
+
+USER app
+
+CMD ["npm", "run", "dev"]
