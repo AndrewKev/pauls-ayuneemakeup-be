@@ -2,14 +2,10 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-RUN addgroup -S appgroup && adduser -S app -G appgroup
-COPY --chown=app:app package*.json ./
+COPY package*.json ./
 RUN npm install
 
-COPY --chown=app:app . ./
+COPY . ./
 
-RUN npx prisma generate 
-
-USER app
-
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npm run db:deploy && npm run dev"]

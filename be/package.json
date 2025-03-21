@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch .",
-    "start": "node ."
+    "start": "node .",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate && npx prisma db pull"
   },
   "keywords": [],
   "author": "",
