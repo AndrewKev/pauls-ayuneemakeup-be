@@ -12,7 +12,10 @@ const {
 router.get("/", async (req, res) => {
   const products = await getAllProducts();
 
-  res.send(products);
+  res.send({
+    message: "Success get all products",
+    data: products
+  });
 });
 
 router.get("/:id", async (req, res) => {
@@ -22,6 +25,7 @@ router.get("/:id", async (req, res) => {
     const product = await getProductById(productId);
 
     res.send({
+      message: "Success get product by id",
       data: product
     });
   } catch (error) {
@@ -37,8 +41,8 @@ router.post("/", async (req, res) => {
     const product = await addNewProduct(newProductData);
 
     res.send({
-      data: product,
       message: "Insert product success",
+      data: product,
     });
   } catch (error) {
     res.status(400).send({ error: error.message || "Something went wrong" });
@@ -47,6 +51,8 @@ router.post("/", async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
   try {
+    await getProductById(parseInt(req.params.id));
+
     const product = await editProductById(parseInt(req.params.id), req.body);
 
     res.send({
