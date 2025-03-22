@@ -67,13 +67,15 @@ router.patch('/:id', async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
+    await getProductById(parseInt(req.params.id));
+
     const productId = parseInt(req.params.id);
 
     const product = await deleteProductById(productId);
 
     res.send({
       message: "Product deleted",
-      product
+      deleted: product
     });
   } catch (error) {
     res.status(400).send({ error: error.message || "Something went wrong" });
