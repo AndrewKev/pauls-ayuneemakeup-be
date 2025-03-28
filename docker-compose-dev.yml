@@ -10,7 +10,7 @@ services:
     networks:
       - ayunee
     expose:
-      - 8080
+      - ${API_PORT}
     environment:
       DATABASE_URL: ${DATABASE_HOST}://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_NAME}?schema=public
     depends_on:
@@ -39,11 +39,11 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-    ports:
-      - 3306:3306
-    # expose:
-    #   # Opens port 3306 on the container
-    #   - 3306
+    # ports:
+    #   - 3306:3306
+    expose:
+      # Opens port 3306 on the container
+      - ${DATABASE_PORT}
     # Where our data will be persisted
     volumes:
       - ayunee-db:/var/lib/mysql

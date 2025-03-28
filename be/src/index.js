@@ -1,5 +1,7 @@
 const express = require('express')
 
+const { auth } = require('./middleware/auth');
+
 const app = express()
 const port = 8080
 
@@ -9,11 +11,14 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-const productController = require("./product/product.controller");
-app.use("/products", productController);
+const authController = require("./auth/auth.controller");
+app.use("/auth", authController);
 
-const newController = require("./news/news.controller");
-app.use("/news", newController);
+const productController = require("./product/product.controller");
+app.use("/products", auth, productController);
+
+const newsController = require("./news/news.controller");
+app.use("/news", newsController);
 
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`)
