@@ -7,17 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  ADMIN
-  CUSTOMER
-}
-
 model User {
-  uuid     String @id @default(uuid())
-  username String @unique
-  email    String @unique
-  password String
-  role  UserRole @default(CUSTOMER)
+  id           String   @id
+  username     String   @unique
+  email        String   @unique
+  password     String
+  role         UserRole @default(CUSTOMER)
+  refreshToken String?  @db.Text
 }
 
 model Product {
@@ -33,4 +29,9 @@ model News {
   title       String
   description String
   image       String
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
 }

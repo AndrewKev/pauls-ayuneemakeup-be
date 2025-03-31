@@ -1,15 +1,14 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const generateAccessToken = (userId) => {
   return jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '15m' // Access token expires in 15 minutes
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRY // Access token expired time
   });
 };
 
 const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: '7d' // Refresh token expires in 7 days
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRY // Refresh token expired time
   });
 };
 

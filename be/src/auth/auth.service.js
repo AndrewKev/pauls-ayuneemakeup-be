@@ -1,14 +1,42 @@
-const { z, ZodError } = require('zod');
+const { z } = require('zod');
 
 const bcrypt = require('bcrypt');
 
-const { findUserByUsernameEmail, insertNewUser } = require('../user/user.repository');
+const { generateAccessToken, generateRefreshToken } = require('../utils/jwt');
+const { updateUserToken } = require('../user/user.repository');
 
-const login = () => {
+const {
+  findUserByUsername,
+  findUserByUsernameEmail,
+  insertNewUser } = require('../user/user.repository');
 
+const login = async (reqBody) => {
+  try {
+    const user = await findUserByUsername(reqBody.username);
+    if (!user) {
+      const err = new Error('Invalid email or password');
+      throw { message: err.message };
+    }
+    
+    const isMatch = await bcrypt.compare(reqBody.password, user.password);
+    if (!isMatch) {
+      const err = new Error('Invalid email or password');
+      throw { message: err.message };
+    }
+
+    const accessToken = generateAccessToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+    
+    await updateUserToken(user.id, refreshToken);
+
+    return { accessToken, refreshToken }
+  } catch (error) {
+    console.log(error)
+    throw error;
+  }
 }
 
-const register =  async (data) => {
+const register = async (data) => {
   const schema = z.object({
     username: z.string().min(3, "Username min 3 characters").max(30, "Username max 30 characters"),
     email: z.string().email(),
@@ -16,7 +44,7 @@ const register =  async (data) => {
   });
 
   const result = schema.safeParse(data);
-  
+
   if (!result.success) {
     throw result.error.issues;
   }
@@ -25,12 +53,12 @@ const register =  async (data) => {
 
   if (checkUser) {
     const err = new Error('User exists');
-    throw {message: err.message};
+    throw { message: err.message };
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 3);
   data.password = hashedPassword;
-  
+
   return insertNewUser(data);
 }
 

@@ -1,5 +1,29 @@
 const prisma = require('../db');
 
+const findUserById = async (id) => {
+  const user = await prisma.user.findUnique(
+    {
+      where: {
+        id
+      }
+    }
+  );
+
+  return user;
+}
+
+const findUserByUsername = async (username) => {
+  const user = await prisma.user.findUnique(
+    {
+      where: {
+        username
+      }
+    }
+  );
+
+  return user;
+}
+
 const findUserByUsernameEmail = async (username, email) => {
   const user = await prisma.user.findFirst({
     where: {
@@ -22,10 +46,20 @@ const insertNewUser = async (data) => {
     },
   });
 
-  return {username: user.username, email: user.email};
+  return { username: user.username, email: user.email };
+}
+
+const updateUserToken = async (id, refreshToken) => {
+  return await prisma.user.update({
+    where: { id: id },
+    data: { refreshToken },
+  });
 }
 
 module.exports = {
+  findUserById,
+  findUserByUsername,
   findUserByUsernameEmail,
-  insertNewUser
+  insertNewUser,
+  updateUserToken
 };
