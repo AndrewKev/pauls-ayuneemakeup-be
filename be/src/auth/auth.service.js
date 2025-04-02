@@ -84,4 +84,12 @@ const regenerateAccessToken = async (refreshToken) => {
   }
 }
 
-module.exports = { login, register, regenerateAccessToken }
+const logout = async (refreshToken) => {
+  let decoded;
+
+  decoded = decodeJwt(refreshToken);
+  
+  await updateUserToken(decoded.userId, null);
+}
+
+module.exports = { login, register, regenerateAccessToken, logout }

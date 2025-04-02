@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const { register, login, regenerateAccessToken } = require('./auth.service');
+const { register, login, regenerateAccessToken, logout } = require('./auth.service');
 
 router.post("/register", async (req, res) => {
   try {
@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
 router.post("/refresh-token", async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    
+
     if(!refreshToken) {
       return res.status(401).send({error: {message: 'Please login again'}});
     }
@@ -55,6 +55,20 @@ router.post("/refresh-token", async (req, res) => {
     const msg = error.message || "Please login again";
     return res.status(403).send({ error: {message: msg} });
   }
+});
+
+router.post("/logout", async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    
+    if(!refreshToken) {
+      return res.status(401).send({error: {message: 'Please login'}});
+    }
+    
+    await logout(refreshToken);
+
+    res.clearCookie("refreshToken");
+    
+    return res.send({ message: 'Success logout' });
 });
 
 module.exports = router;
