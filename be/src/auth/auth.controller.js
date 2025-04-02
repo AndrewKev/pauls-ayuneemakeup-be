@@ -35,10 +35,14 @@ router.post("/login", async (req, res) => {
 router.post("/refresh-token", async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-
+    
+    if(!refreshToken) {
+      return res.status(401).send({error: {message: 'Please login again'}});
+    }
+    
     const {accessToken} = await regenerateAccessToken(refreshToken);
 
-    // Set refresh token in HTTP-only cookie
+    // Set new refresh token if needed (optional)
     // res.cookie('refreshToken', refreshToken, {
     //   httpOnly: true,
     //   secure: process.env.NODE_ENV === 'production',
@@ -46,10 +50,10 @@ router.post("/refresh-token", async (req, res) => {
     //   maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
     // });
 
-    res.send({ message: 'Success refresh access token', data: {accessToken} });
+    return res.send({ message: 'Success refresh access token', data: {accessToken} });
   } catch (error) {
-    const msg = error.message || "Please log in again";
-    res.status(403).send({ error: {message: msg} });
+    const msg = error.message || "Please login again";
+    return res.status(403).send({ error: {message: msg} });
   }
 });
 
