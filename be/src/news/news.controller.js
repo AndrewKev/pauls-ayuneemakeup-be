@@ -9,6 +9,8 @@ const {
   editNewsById,
   deleteNewsById } = require('./news.service');
 
+const {auth} = require('../middleware/auth');
+
 router.get("/", async (req, res) => {
   const news = await getAllNews();
 
@@ -34,7 +36,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const newNewsData = req.body;
 
@@ -49,7 +51,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
   try {
     await getNewsById(parseInt(req.params.id));
 
@@ -65,7 +67,7 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     await getNewsById(parseInt(req.params.id));
 

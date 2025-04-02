@@ -1,8 +1,6 @@
 const express = require('express')
 const cookieParser = require("cookie-parser");
 
-const { auth } = require('./middleware/auth');
-
 const app = express()
 const port = 8080
 
@@ -17,7 +15,7 @@ const authController = require("./auth/auth.controller");
 app.use("/auth", authController);
 
 const productController = require("./product/product.controller");
-app.use("/products", auth, productController);
+app.use("/products", productController);
 
 const newsController = require("./news/news.controller");
 app.use("/news", newsController);

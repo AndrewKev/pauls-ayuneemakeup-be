@@ -9,6 +9,8 @@ const {
   editProductById,
   deleteProductById } = require('./product.service');
 
+const { auth } = require('../middleware/auth');
+
 router.get("/", async (req, res) => {
   const products = await getAllProducts();
 
@@ -34,7 +36,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const newProductData = req.body;
 
@@ -49,7 +51,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', auth, async (req, res) => {
   try {
     await getProductById(parseInt(req.params.id));
 
@@ -65,7 +67,7 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     await getProductById(parseInt(req.params.id));
 
