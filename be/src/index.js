@@ -1,17 +1,13 @@
 const express = require('express')
+const cookieParser = require("cookie-parser");
 
 const { auth } = require('./middleware/auth');
-
-// const dotenv = require('dotenv');
-// const path = require('path');
-// const envPath = path.resolve(__dirname, '../.env');
-// dotenv.config({ path: envPath });
-// dotenv.config({ path: '../.env' });
 
 const app = express()
 const port = 8080
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

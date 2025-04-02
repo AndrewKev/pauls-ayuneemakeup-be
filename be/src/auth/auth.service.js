@@ -2,10 +2,11 @@ const { z } = require('zod');
 
 const bcrypt = require('bcrypt');
 
-const { generateAccessToken, generateRefreshToken } = require('../utils/jwt');
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
 const { updateUserToken } = require('../user/user.repository');
 
 const {
+  findUserById,
   findUserByUsername,
   findUserByUsernameEmail,
   insertNewUser } = require('../user/user.repository');
@@ -17,7 +18,7 @@ const login = async (reqBody) => {
       const err = new Error('Invalid email or password');
       throw { message: err.message };
     }
-    
+
     const isMatch = await bcrypt.compare(reqBody.password, user.password);
     if (!isMatch) {
       const err = new Error('Invalid email or password');
@@ -26,7 +27,7 @@ const login = async (reqBody) => {
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
-    
+
     await updateUserToken(user.id, refreshToken);
 
     return { accessToken, refreshToken }
@@ -62,4 +63,12 @@ const register = async (data) => {
   return insertNewUser(data);
 }
 
-module.exports = { login, register }
+const regenerateAccessToken = async (refreshToken) => {
+    const decoded = verifyRefreshToken(refreshToken);
+
+    const accessToken = generateAccessToken(decoded.userId);
+    
+    return { accessToken };
+}
+
+module.exports = { login, register, regenerateAccessToken }

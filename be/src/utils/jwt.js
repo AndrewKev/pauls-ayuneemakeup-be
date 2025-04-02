@@ -20,6 +20,10 @@ const verifyRefreshToken = (token) => {
   return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 };
 
+// const verifyRefreshToken = (token, callback) => {
+//   jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, callback);
+// };
+
 module.exports = {
   generateAccessToken,
   generateRefreshToken,

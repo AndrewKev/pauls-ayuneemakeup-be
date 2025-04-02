@@ -15,18 +15,18 @@ const auth = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     
-    if (!token) return res.status(401).send({ message: 'Unauthorized' });
+    if (!token) return res.status(401).send({error: { message: 'Unauthorized' }});
 
     const decoded = verifyAccessToken(token);
+    
     const user = await findUserById(decoded.userId);
     
-    if (!user) return res.status(403).send({ message: 'Forbidden' });
+    if (!user) return res.status(403).send({error: { message: 'Token invalid' }});
 
     req.user = user;
     next();
   } catch (err) {
-    console.error(err);
-    return res.status(403).send({ message: 'Forbidden' })
+    return res.status(403).send({error: { message: 'Token invalid' }})
   }
 };
 
