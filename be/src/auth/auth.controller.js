@@ -39,16 +39,17 @@ router.post("/refresh-token", async (req, res) => {
     const {accessToken} = await regenerateAccessToken(refreshToken);
 
     // Set refresh token in HTTP-only cookie
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
-    });
+    // res.cookie('refreshToken', refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+    // });
 
     res.send({ message: 'Success refresh access token', data: {accessToken} });
   } catch (error) {
-    res.status(403).send({ error: {message: 'Please log in again'} });
+    const msg = error.message || "Please log in again";
+    res.status(403).send({ error: {message: msg} });
   }
 });
 

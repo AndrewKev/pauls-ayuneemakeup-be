@@ -2,13 +2,14 @@ const { z } = require('zod');
 
 const bcrypt = require('bcrypt');
 
-const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../utils/jwt');
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken, decodeJwt } = require('../utils/jwt');
 const { updateUserToken } = require('../user/user.repository');
 
 const {
   findUserById,
   findUserByUsername,
   findUserByUsernameEmail,
+  findUserByRefreshToken,
   insertNewUser } = require('../user/user.repository');
 
 const login = async (reqBody) => {
@@ -64,11 +65,23 @@ const register = async (data) => {
 }
 
 const regenerateAccessToken = async (refreshToken) => {
-    const decoded = verifyRefreshToken(refreshToken);
+  let decoded;
+  try {
+    const userExist = await findUserByRefreshToken(refreshToken);
 
-    const accessToken = generateAccessToken(decoded.userId);
-    
+    decoded = decodeJwt(userExist.refreshToken);
+    const verified = verifyRefreshToken(refreshToken);
+
+    const accessToken = generateAccessToken(verified.userId);
+
     return { accessToken };
+  } catch (error) {
+    if(decoded && decoded.userId) {
+      await updateUserToken(decoded.userId, null);
+    }
+    const err = new Error('Invalid refresh token, please login again');
+    throw { message: err.message };
+  }
 }
 
 module.exports = { login, register, regenerateAccessToken }

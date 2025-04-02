@@ -37,6 +37,18 @@ const findUserByUsernameEmail = async (username, email) => {
   return user;
 }
 
+const findUserByRefreshToken = async (refreshToken) => {
+  const user = await prisma.user.findFirst(
+    {
+      where: {
+        refreshToken: refreshToken
+      }
+    }
+  );
+
+  return user;
+}
+
 const insertNewUser = async (data) => {
   const user = await prisma.user.create({
     data: {
@@ -60,6 +72,7 @@ module.exports = {
   findUserById,
   findUserByUsername,
   findUserByUsernameEmail,
+  findUserByRefreshToken,
   insertNewUser,
   updateUserToken
 };
