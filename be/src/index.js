@@ -1,11 +1,12 @@
 const express = require('express')
 const cookieParser = require("cookie-parser");
-
+const cors = require('cors');
 const app = express()
 const port = 8080
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
