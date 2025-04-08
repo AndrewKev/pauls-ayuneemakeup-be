@@ -3,6 +3,14 @@ server {
     listen [::]:80;
     server_name localhost;
     
+    location / {
+        proxy_pass http://fe-admin:$CLIENT_PORT/;
+        proxy_set_header X-Forwarded-Host ${X}host;
+        proxy_set_header X-Forwarded-Port ${X}server_port;
+        proxy_set_header Upgrade ${X}http_upgrade;
+        proxy_set_header Connection 'upgrade';
+    }
+    
     location /api/ {
         proxy_pass http://be:$API_PORT/;
     }

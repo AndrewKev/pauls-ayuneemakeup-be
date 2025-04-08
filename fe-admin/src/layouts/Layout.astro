@@ -1,0 +1,21 @@
+---
+import '../styles/global.css';
+
+import { AppSidebar } from "@/components/app-sidebar"
+const { title, activePage } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<AppSidebar client:load activePage={activePage}>
+			<slot />
+		</AppSidebar>
+	</body>
+</html>

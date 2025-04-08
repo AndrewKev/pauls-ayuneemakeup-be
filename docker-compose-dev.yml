@@ -6,11 +6,13 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./be:/app
-      - app-node-modules:/app/node_modules
+      # - app-node-modules:/app/node_modules
     networks:
       - ayunee
     expose:
       - ${API_PORT}
+    ports:
+      - ${API_PORT}:${API_PORT}
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
@@ -21,13 +23,27 @@ services:
       - db
     restart: on-failure
 
+  fe-admin:
+      container_name: ayunee_fe_admin
+      build:
+        context: ./fe-admin
+        dockerfile: Dockerfile.dev
+      volumes:
+        - ./fe-admin:/app
+        # - app-node-modules:/app/node_modules
+      networks:
+        - ayunee
+      ports:
+        - ${CLIENT_PORT}:${CLIENT_PORT}
+      restart: on-failure
+
   proxy:
     container_name: ayunee_proxy
     build: 
       context: ./nginx
       dockerfile: Dockerfile
     environment:
-      # CLIENT_PORT: 3000
+      CLIENT_PORT: ${CLIENT_PORT}
       API_PORT: ${API_PORT}
       # PMA_PORT: 80
     ports: 
@@ -36,6 +52,7 @@ services:
       - ayunee
     depends_on:
       - be
+      - fe-admin
 
   db:
     container_name: ayunee_database
@@ -76,4 +93,4 @@ networks:
 
 volumes:
   ayunee-db:
-  app-node-modules:
+  # app-node-modules:
