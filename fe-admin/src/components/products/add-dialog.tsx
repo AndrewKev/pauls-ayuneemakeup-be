@@ -87,7 +87,7 @@ export const AddProductDialog = observer(
         resetForm();
         toast("Success insert new product")
 
-        newProductStore.setTrigger('update') // to trigger the fetch data in the table
+        newProductStore.setTrigger('add') // to trigger the fetch data in the table
       } catch (err: any) {
         setError(err.message);
       } finally {
