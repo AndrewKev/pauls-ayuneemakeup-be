@@ -2,6 +2,7 @@
 import '../styles/global.css';
 
 import { AppSidebar } from "@/components/app-sidebar"
+import { Toaster } from "@/components/ui/sonner"
 const { title, activePage } = Astro.props;
 ---
 
@@ -15,7 +16,10 @@ const { title, activePage } = Astro.props;
 	</head>
 	<body>
 		<AppSidebar client:load activePage={activePage}>
-			<slot />
+			<div class="p-10">
+				<slot />
+			</div>
 		</AppSidebar>
+		<Toaster client:only />
 	</body>
 </html>

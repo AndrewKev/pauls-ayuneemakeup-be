@@ -1,10 +1,13 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { Button } from "@/components/ui/button";
+import Layout from "../layouts/Layout.astro";
+import { ProductTable } from "@/components/products/table";
+import { AddProductDialog } from "@/components/products/add-dialog";
 ---
 
 <Layout title="Ayunee | Products" activePage="Products">
-  <div class="grid place-items-center h-screen content-center">
-		<Button>Welcome to Ayunee Makeup!</Button>
-	</div>
+  <div class="mb-4">
+    <AddProductDialog client:load />
+  </div>
+  
+  <ProductTable client:load />
 </Layout>

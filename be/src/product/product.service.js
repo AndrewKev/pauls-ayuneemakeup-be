@@ -1,4 +1,6 @@
-const { 
+const { z } = require('zod');
+
+const {
   findProducts,
   findProductById,
   insertProduct,
@@ -13,7 +15,7 @@ const getAllProducts = async () => {
 };
 
 const getProductById = async (id) => {
-  const product =  await findProductById(id);
+  const product = await findProductById(id);
 
   if (!product) {
     const err = new Error("Product not found");
@@ -25,6 +27,19 @@ const getProductById = async (id) => {
 }
 
 const addNewProduct = async (data) => {
+  const schema = z.object({
+    name: z.string().min(1, "Name cannot be empty"),
+    price: z.number(),
+    description: z.string(),
+    image: z.string()
+  });
+
+  const result = schema.safeParse(data);
+
+  if (!result.success) {
+    throw result.error.flatten();
+  }
+
   const product = await insertProduct(data);
 
   return product;
