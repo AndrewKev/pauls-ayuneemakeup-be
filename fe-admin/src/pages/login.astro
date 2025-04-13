@@ -1,0 +1,11 @@
+---
+
+import LoginLayout from "@/layouts/LoginLayout.astro";
+import Layout from "@/layouts/Layout.astro";
+
+import { LoginCard } from "@/components/login/card";
+---
+
+<LoginLayout title="Login">
+  <LoginCard client:load />
+</LoginLayout>
