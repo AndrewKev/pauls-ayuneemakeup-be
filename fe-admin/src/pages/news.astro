@@ -1,10 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Button } from "@/components/ui/button";
+import {AddNewsDialog} from "@/components/news/add-dialog";
+import { NewsTable } from "@/components/news/table";
 ---
 
 <Layout title="Ayunee | News" activePage="News">
-  <div class="grid place-items-center h-screen content-center">
-		<Button>Welcome to Ayunee Makeup!</Button>
-	</div>
+  <div class="mb-4">
+    <AddNewsDialog client:load />
+  </div>
+
+  <NewsTable client:load />
 </Layout>
